@@ -22,11 +22,11 @@ app.use(cookieSession({
     maxAge: config.maxAge, //24h
 }))
 
-const port = process.env.PORT || 3001;
+/*const port = process.env.PORT || 3001;
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
-});
+});*/
 
 app.use('/', indexRouter);
 app.use('/user', userRouter);
