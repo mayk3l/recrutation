@@ -1,20 +1,35 @@
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+require("./config/database").connect();
+const cookieSession = require('cookie-session');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const config = require('./config/jwt-config');
+const indexRouter = require('./routes/index');
+const authRouter = require('./routes/auth');
+const userRouter = require('./routes/user');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-
-var app = express();
+const app = express();
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieSession({
+    name: 'session',
+    keys: config.keySession,
+    maxAge: config.maxAge, //24h
+}))
+
+const port = process.env.PORT || 3001;
+
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/user', userRouter);
+app.use('/auth', authRouter);
 
 module.exports = app;
