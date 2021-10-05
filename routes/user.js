@@ -10,11 +10,11 @@ const isRegistered = require("../middleware/isRegistered");
 router.post('/register', isRegistered, async (req, res) => {
    try {
        if (req.user) {
-           res.status(200).json(req.user);
+           res.status(200).json(req.user.email);
        } else {
-           const { first_name, last_name, email, pwd } = req.body;
+           const { first_name, last_name, email, pwd, phone } = req.body;
 
-           if (!(email && pwd && first_name && last_name)) {
+           if (!(email && pwd && first_name && last_name && phone)) {
                res.status(400).send('fill_all_required_form_fields');
            }
 
@@ -32,6 +32,7 @@ router.post('/register', isRegistered, async (req, res) => {
            const user = await User.create({
                first_name,
                last_name,
+               phone,
                email: email.toLowerCase(), // sanitize: convert email to lowercase
                pwdHash: encryptedPassword,
                updateToken: uuid.v4(),

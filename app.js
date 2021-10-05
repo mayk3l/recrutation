@@ -21,7 +21,6 @@ app.use(cookieSession({
     keys: config.keySession,
     maxAge: config.maxAge, //24h
 }))
-
 /*const port = process.env.PORT || 3001;
 
 app.listen(port, () => {

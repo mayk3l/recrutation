@@ -5,6 +5,7 @@ const userSchema = new mongoose.Schema({
     last_name: { type: String, default: null, maxlength: [50, 'too_long_last_name'] },
     email: { type: String, unique: true, strength: 2, locale: 'en', trim: true, lowercase: true, maxlength: [50, 'too_long_email']  },
     pwdHash: { type: String },
+    phone: { type: String, default: null },
     updateToken: { type: String },
     token: { type: String },
     last_login_dt: { type: Date, default: Date.now }

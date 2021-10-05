@@ -33,7 +33,7 @@ router.post('/login', async (req, res) => {
 
             res.status(200).json(userObj);
         }
-        res.status(400).send("wrong_credentials");
+        res.status(401).send("wrong_credentials");
     } catch (error) {
 
     }
