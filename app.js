@@ -28,7 +28,7 @@ app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });*/
 app.use(cors({
-    origin: 'https://recrutation-healfy-front.herokuapp.com'
+    origin: '*'
 }));
 app.use('/', indexRouter);
 app.use('/user', userRouter);
