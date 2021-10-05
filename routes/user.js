@@ -34,7 +34,7 @@ router.post('/register', isRegistered, async (req, res) => {
                last_name,
                phone,
                email: email.toLowerCase(), // sanitize: convert email to lowercase
-               pwdHash: encryptedPassword,
+               pwd_hash: encryptedPassword,
                updateToken: uuid.v4(),
            });
 

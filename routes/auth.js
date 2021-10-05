@@ -14,7 +14,7 @@ router.post('/login', async (req, res) => {
             res.status(400).send('fill_all_required_form_fields');
         }
         let user = await User.findOne({ email });
-        if (user && (await bcrypt.compare(pwd, user.pwdHash))) {
+        if (user && (await bcrypt.compare(pwd, user.pwd_hash))) {
             // Create token
             const token = jwt.sign(
                 { user_id: user._id, email },
@@ -24,12 +24,19 @@ router.post('/login', async (req, res) => {
                 }
             );
 
-            // save user token
+            // saving first time loggin so I can ask for SMS if this value is set to true
+            const digits = (new Array(9)).fill(null).map((e, i) => i + 1);
+            const generatedCode = (new Array(4)).fill(null).map(() => digits[~~(Math.random() * digits.length)]).join('');
+            user.first_time_logged = true;
+            user.sms_code = generatedCode;
+            await user.save();
+
+            // add user token
             user.token = token;
 
             //deleting sensitive data as password, shouldn't be returned to frontend
             const userObj = user.toObject();
-            delete userObj.pwdHash;
+            delete userObj.pwd_hash;
 
             res.status(200).json(userObj);
         }
