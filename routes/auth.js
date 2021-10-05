@@ -29,11 +29,14 @@ router.post('/login', async (req, res) => {
             const generatedCode = (new Array(4)).fill(null).map(() => digits[~~(Math.random() * digits.length)]).join('');
             user.first_time_logged = true;
             user.sms_code = generatedCode;
+            console.log(user);
             await user.save();
+
 
             // add user token
             user.token = token;
 
+            console.log(user);
             //deleting sensitive data as password, shouldn't be returned to frontend
             const userObj = user.toObject();
             delete userObj.pwd_hash;
