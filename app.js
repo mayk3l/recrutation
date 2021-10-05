@@ -8,6 +8,7 @@ const config = require('./config/jwt-config');
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
+const cors = require('cors');
 
 const app = express();
 
@@ -26,7 +27,9 @@ app.use(cookieSession({
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });*/
-
+app.use(cors({
+    origin: 'https://recrutation-healfy-front.herokuapp.com'
+}));
 app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/auth', authRouter);
