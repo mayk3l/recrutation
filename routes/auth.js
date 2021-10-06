@@ -70,7 +70,7 @@ router.put('/sms-verify/:id', async (req, res) => {
        }
    }
     const token = jwt.sign(
-        { user_id: user._id, email },
+        { user_id: users[0]._id, email: users[0].email },
         process.env.JWT_KEY,
         {
             expiresIn: process.env.JWT_AGE,
