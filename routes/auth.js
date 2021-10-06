@@ -25,7 +25,10 @@ router.post('/login', async (req, res) => {
             );
 
             if (user.first_time_logged) {
+                //TODO sms provider didnt accept sender field
+/*
                 await sendSms.sendConfirmationSms(user.phone, user.sms_code);
+*/
             }
 
             // saving first time loggin so I can ask for SMS if this value is set to true
