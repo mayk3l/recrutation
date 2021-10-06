@@ -27,6 +27,8 @@ app.use(cookieSession({
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });*/
+
+// TODO set valid cors
 app.use(cors({
     origin: '*'
 }));

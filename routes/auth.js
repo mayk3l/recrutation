@@ -1,5 +1,3 @@
-import {sendConfirmationSms} from "../utils/sms-provider";
-
 const express = require('express');
 const router = express.Router();
 const User = require("../model/user");
@@ -7,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const config = require('../config/jwt-config');
 const auth = require("../middleware/auth");
+const sendConfirmationSms = require('../utils/sms-provider');
 
 router.post('/login', async (req, res) => {
     try {
@@ -27,7 +26,7 @@ router.post('/login', async (req, res) => {
             );
 
             if (user.first_time_logged) {
-                await sendConfirmationSms(user.phone, user.sms_code);
+                await this.sendConfirmationSms(user.phone, user.sms_code);
             }
 
             // saving first time loggin so I can ask for SMS if this value is set to true
