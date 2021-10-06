@@ -30,6 +30,8 @@ app.listen(port, () => {
 app.use(cors({
     origin: '*'
 }));
+
+console.log(process.env);
 app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/auth', authRouter);

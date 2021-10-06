@@ -29,7 +29,6 @@ router.post('/login', async (req, res) => {
             const generatedCode = (new Array(4)).fill(null).map(() => digits[~~(Math.random() * digits.length)]).join('');
             user.first_time_logged = true;
             user.sms_code = generatedCode;
-            console.log(user);
             await user.save();
 
 
@@ -51,6 +50,14 @@ router.post('/login', async (req, res) => {
 
 router.post('/logout', auth, async (req, res) => {
     res.status(200).json({logout: 'logout'});
+});
+
+router.put('/sms-verify/:id', async (req, res) => {
+   const user = await User.findOne({_id: req.params._id});
+   if (req.body.smsCode !== user.sms_code) {
+       res.status(400).send("wrong_code");
+   }
+   res.status(200).send("code_verified");
 });
 
 module.exports = router;
