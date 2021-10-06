@@ -37,6 +37,7 @@ router.post('/login', async (req, res) => {
                 //TODO add generated code but for task I add 1234 here
                 user.sms_code = 1234;
                 await user.save();
+                user.first_time_logged = false;
             }
 
             // add user token
