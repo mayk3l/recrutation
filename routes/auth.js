@@ -62,7 +62,7 @@ router.post('/logout', auth, async (req, res) => {
 
 router.put('/sms-verify/:id', async (req, res) => {
    const user = await User.findOne({_id: req.params._id});
-   if ("1234" !== user.sms_code) {
+   if (req.body.smsCode !== user.sms_code) {
        res.status(400).send("wrong_code");
    }
    res.status(200).send("code_verified");
