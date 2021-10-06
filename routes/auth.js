@@ -24,22 +24,20 @@ router.post('/login', async (req, res) => {
                 }
             );
 
-            if (user.first_time_logged) {
+            if (!user.first_time_logged) {
                 //TODO sms provider didnt accept sender field
 /*
                 await sendSms.sendConfirmationSms(user.phone, user.sms_code);
 */
+                // saving first time loggin so I can ask for SMS if this value is set to true
+                const digits = (new Array(9)).fill(null).map((e, i) => i + 1);
+                const generatedCode = (new Array(4)).fill(null).map(() => digits[~~(Math.random() * digits.length)]).join('');
+                user.first_time_logged = true;
+
+                //TODO add generated code but for task I add 1234 here
+                user.sms_code = 1234;
+                await user.save();
             }
-
-            // saving first time loggin so I can ask for SMS if this value is set to true
-            const digits = (new Array(9)).fill(null).map((e, i) => i + 1);
-            const generatedCode = (new Array(4)).fill(null).map(() => digits[~~(Math.random() * digits.length)]).join('');
-            user.first_time_logged = true;
-
-            //TODO add generated code but for task I add 1234 here
-            user.sms_code = 1234;
-            await user.save();
-
 
             // add user token
             user.token = token;
@@ -69,15 +67,17 @@ router.put('/sms-verify/:id', async (req, res) => {
            res.status(400).send("wrong_code");
        }
    }
+    const lastUser = users.pop();
     const token = jwt.sign(
-        { user_id: users[0]._id, email: users[0].email },
+        { user_id:lastUser._id, email: lastUser.email },
         process.env.JWT_KEY,
         {
             expiresIn: process.env.JWT_AGE,
         }
     );
-   users[0].token = token;
-   const userObj = users[0].toObject();
+
+   lastUser.token = token;
+   const userObj = lastUser.toObject();
    delete userObj.pwd_hash;
    res.status(200).json(userObj);
 });
