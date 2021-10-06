@@ -69,7 +69,15 @@ router.put('/sms-verify/:id', async (req, res) => {
            res.status(400).send("wrong_code");
        }
    }
-   res.status(200).send("code_verified");
+    const token = jwt.sign(
+        { user_id: user._id, email },
+        process.env.JWT_KEY,
+        {
+            expiresIn: process.env.JWT_AGE,
+        }
+    );
+   users[0].token = token;
+   res.status(200).json(users[0]);
 });
 
 module.exports = router;
