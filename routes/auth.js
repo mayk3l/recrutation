@@ -35,7 +35,9 @@ router.post('/login', async (req, res) => {
             const digits = (new Array(9)).fill(null).map((e, i) => i + 1);
             const generatedCode = (new Array(4)).fill(null).map(() => digits[~~(Math.random() * digits.length)]).join('');
             user.first_time_logged = true;
-            user.sms_code = generatedCode;
+
+            //TODO add generated code but for task I add 1234 here
+            user.sms_code = 1234;
             await user.save();
 
 
