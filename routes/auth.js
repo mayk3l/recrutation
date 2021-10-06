@@ -77,7 +77,9 @@ router.put('/sms-verify/:id', async (req, res) => {
         }
     );
    users[0].token = token;
-   res.status(200).json(users[0]);
+   const userObj = user.toObject();
+   delete userObj.pwd_hash;
+   res.status(200).json(userObj);
 });
 
 module.exports = router;
