@@ -41,9 +41,9 @@ router.post('/register', isRegistered, async (req, res) => {
            // Create token
            const token = jwt.sign(
                { user_id: user._id, email },
-               'HEALFYKEY',
+               process.env.JWT_KEY,
                {
-                   expiresIn: config.maxAge,
+                   expiresIn: process.env.JWT_AGE,
                }
            );
            // save user token

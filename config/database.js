@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 exports.connect = () => {
     // Connecting to the database
     mongoose
-        .connect('mongodb+srv://healfy:IOmQTQP26s594lvR@cluster0.xjoz1.mongodb.net/rec?retryWrites=true&w=majority', {
+        .connect(`${process.env.DB_CONNECTION}`, {
             useUnifiedTopology: true,
         })
         .then(() => {

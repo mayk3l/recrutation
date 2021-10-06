@@ -6,9 +6,9 @@ export const sendConfirmationSms = async (
  	const message = `Aktywuj logowanie: ${smsCode}`;
  	const urlParameters = querystring.stringify(
  		{
- 			key: 'test',
+ 			key: process.env.SMS_KEY,
  			clear_polish: 1,
- 			password: 'test',
+ 			password: process.env.SMS_PASS,
  			from: 'ITFOCUS',
  			to: phoneNumber instanceof Array ? phoneNumber : [phoneNumber],
  			msg: message,
@@ -19,7 +19,7 @@ export const sendConfirmationSms = async (
  		{ encodeURIComponent: encodeURI },
  	);
 
- 	const response = await fetch(`https://api2.smsplanet.pl/sms`, {
+ 	const response = await fetch(process.env.SMS_URL, {
  		method: 'POST',
  		body: urlParameters,
  		headers: {
