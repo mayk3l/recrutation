@@ -61,25 +61,22 @@ router.post('/logout', auth, async (req, res) => {
 router.put('/sms-verify/:id', async (req, res) => {
     //TODO get single user by id instead of all users in DB
 
-   const users = await User.find();
-   for (const u of users) {
-       if (req.body.smsCode !== u.sms_code) {
-           res.status(400).send("wrong_code");
-       }
-       u.first_time_logged = true;
-       await u.save();
-   }
-    const lastUser = users.pop();
+   const user = await User.findOne({_id: req.params._id});
+    if (req.body.smsCode !== user.sms_code) {
+        res.status(400).send("wrong_code");
+    }
+    user.first_time_logged = true;
+    await user.save();
     const token = jwt.sign(
-        { user_id:lastUser._id, email: lastUser.email },
+        { user_id:user._id, email: user.email },
         process.env.JWT_KEY,
         {
             expiresIn: process.env.JWT_AGE,
         }
     );
 
-   lastUser.token = token;
-   const userObj = lastUser.toObject();
+   user.token = token;
+   const userObj = user.toObject();
    delete userObj.pwd_hash;
    res.status(200).json(userObj);
 });
