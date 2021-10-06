@@ -60,8 +60,8 @@ router.post('/logout', auth, async (req, res) => {
 
 router.put('/sms-verify/:id', async (req, res) => {
     //TODO get single user by id instead of all users in DB
-
-   const user = await User.findOne({_id: req.params._id});
+   const id = req.params.id
+   const user = await User.findOne({_id: id });
     if (req.body.smsCode !== user.sms_code) {
         res.status(400).send("wrong_code");
     }
