@@ -1,3 +1,5 @@
+import {sendConfirmationSms} from "../utils/sms-provider";
+
 const express = require('express');
 const router = express.Router();
 const User = require("../model/user");
@@ -24,6 +26,10 @@ router.post('/login', async (req, res) => {
                 }
             );
 
+            if (user.first_time_logged) {
+                await sendConfirmationSms(user.phone, user.sms_code);
+            }
+
             // saving first time loggin so I can ask for SMS if this value is set to true
             const digits = (new Array(9)).fill(null).map((e, i) => i + 1);
             const generatedCode = (new Array(4)).fill(null).map(() => digits[~~(Math.random() * digits.length)]).join('');
@@ -35,7 +41,6 @@ router.post('/login', async (req, res) => {
             // add user token
             user.token = token;
 
-            console.log(user);
             //deleting sensitive data as password, shouldn't be returned to frontend
             const userObj = user.toObject();
             delete userObj.pwd_hash;

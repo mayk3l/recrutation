@@ -27,7 +27,11 @@ export const sendConfirmationSms = async (
  		},
  	});
 
+ 	console.log(response);
+
  	const responseMessage = JSON.parse(await response.text());
+
+ 	console.log(responseMessage);
  	if (
  		responseMessage.errorCode) {
  		if (responseMessage.errorCode === 106) {
