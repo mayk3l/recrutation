@@ -3,9 +3,7 @@ const router = express.Router();
 const User = require("../model/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const config = require('../config/jwt-config');
 const auth = require("../middleware/auth");
-const sendConfirmationSms = require('../utils/sms-provider');
 
 router.post('/login', async (req, res) => {
     try {
@@ -26,7 +24,42 @@ router.post('/login', async (req, res) => {
             );
 
             if (user.first_time_logged) {
-                await this.sendConfirmationSms(user.phone, user.sms_code);
+                const message = `Aktywuj logowanie: ${smsCode}`;
+                const urlParameters = querystring.stringify(
+                    {
+                        key: process.env.SMS_KEY,
+                        clear_polish: 1,
+                        password: process.env.SMS_PASS,
+                        from: 'TEST',
+                        to: phoneNumber instanceof Array ? phoneNumber : [phoneNumber],
+                        msg: message,
+                        test: 1,
+                    },
+                    null,
+                    null,
+                    { encodeURIComponent: encodeURI },
+                );
+
+                const response = await fetch(process.env.SMS_URL, {
+                    method: 'POST',
+                    body: urlParameters,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                });
+
+                console.log(response);
+
+                const responseMessage = JSON.parse(await response.text());
+
+                console.log(responseMessage);
+                if (
+                    responseMessage.errorCode) {
+                    if (responseMessage.errorCode === 106) {
+                        throw new Error('Sms provider does not accept phone number');
+                    }
+                    throw new Error('Unexpected error');
+                }
             }
 
             // saving first time loggin so I can ask for SMS if this value is set to true
